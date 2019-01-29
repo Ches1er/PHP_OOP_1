@@ -1,55 +1,44 @@
 <?php
-class action_login{
-    private $view="login";
-    private $template="default";
+class login_register{
+    private $view;
+    private $template;
 
-    public function __construct()
-    {
+    private function unset_errors_old(){
+        if ($_SESSION["errors"]!=null)unset($_SESSION["errors"]);
+        if ($_SESSION["old"]!=null)unset($_SESSION["old"]);
+        return "";
     }
     public function run(){
         $auth = new Auth(new FileStorage("users"));
         $redirect = new Redirect("/");
         if ($auth->auth_isAuth())return $redirect->redirect();
         $v = new ViewWithTemplate($this->view,$this->template,["errors"=>$_SESSION["errors"]]);
-        if ($_SESSION["errors"]!=null)unset($_SESSION["errors"]);
+        $this->unset_errors_old();
         return $v->renderViewWithTemplate();
     }
 }
 
-class action_register{
+class action_login extends login_register {
+    private $view="login";
+    private $template="default";
+}
+
+class action_register extends login_register{
     private $view="register";
     private $template="default";
-
-    public function __construct()
-    {
-    }
-    public function run(){
-        $auth = new Auth(new FileStorage("users"));
-        $redirect = new Redirect("/");
-        if ($auth->auth_isAuth())return $redirect->redirect();
-        $v = new ViewWithTemplate($this->view,$this->template,["errors"=>$_SESSION["errors"],"old"=>$_SESSION["old"]]);
-        if ($_SESSION["errors"]!=null)unset($_SESSION["errors"]);
-        if ($_SESSION["old"]!=null)unset($_SESSION["old"]);
-        return $v->renderViewWithTemplate();
-    }
 }
 
 class action_logout{
-    public function __construct()
-    {
-    }
     public function run(){
         $auth = new Auth(new FileStorage("users"));
-        $redirect = new Redirect("/");
         $auth->auth_logout();
+        $redirect = new Redirect("/");
         return $redirect->redirect();
     }
 }
 
 class action_loginhandle{
-    public function __construct()
-    {
-    }
+
     public function run(){
         $auth = new Auth(new FileStorage("users"));
         if(empty($_POST["login"])||empty($_POST["pass"])){
@@ -66,12 +55,10 @@ class action_loginhandle{
 }
 
 class action_registerhandle{
-    public function __construct()
-    {
-    }
+
     public function run(){
-        $rb=new Redirect("/login");
         $auth = new Auth(new FileStorage("users"));
+
         if(empty($_POST["login"])||empty($_POST["pass"])||empty($_POST["pass2"])){
             $rb=new Redirect_back_with_errors("Заполните все поля");
             return $rb->redirect_back();
@@ -84,6 +71,8 @@ class action_registerhandle{
             $rb=new Redirect_back_with_errors("Имя пользователя уже занято");
             return $rb->redirect_back();
         }
-        return $rb->redirect();
+
+        $redirect=new Redirect("/login");
+        return $redirect->redirect();
     }
 }

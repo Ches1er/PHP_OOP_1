@@ -3,11 +3,9 @@
 class Redirect{
     private $url;
 
-    public function __construct($url)
-    {
+    public function __construct($url){
         $this->url = $url;
     }
-
     public function redirect(){
         header("Location:{$this->url}");
         return "";
@@ -17,8 +15,7 @@ class Redirect{
 class Redirect_back_with_errors{
     private $errors;
 
-    public function __construct($errors)
-    {
+    public function __construct($errors){
         $this->errors = $errors;
     }
 

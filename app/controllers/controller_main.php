@@ -4,9 +4,6 @@ class action_index{
     private $view="main";
     private $template="default";
 
-    public function __construct()
-    {
-    }
     public function run(){
         $v = new ViewWithTemplate($this->view,$this->template,["title"=>"Главная",
             "user"=>new Auth(new FileStorage('users'))]);
