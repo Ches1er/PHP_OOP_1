@@ -6,7 +6,7 @@ class action_index{
 
     public function run(){
         $v = new ViewWithTemplate($this->view,$this->template,["title"=>"Главная",
-            "user"=>new Auth(new FileStorage('users'))]);
+            "user"=>new Auth('users')]);
         return $v->renderViewWithTemplate();
     }
 }
@@ -20,4 +20,5 @@ class action_contacts{
         $v = new ViewWithTemplate($this->view,$this->template,$this->data);
         return $v->renderViewWithTemplate();
     }
+
 }

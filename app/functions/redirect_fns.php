@@ -12,10 +12,11 @@ class Redirect{
     }
 }
 
-class Redirect_back_with_errors{
+class Redirect_back_with_errors extends Redirect {
     private $errors;
 
-    public function __construct($errors){
+    public function __construct($url,$errors){
+        parent::__construct($url);
         $this->errors = $errors;
     }
 
@@ -23,8 +24,7 @@ class Redirect_back_with_errors{
         if (session_status() !== PHP_SESSION_ACTIVE) session_start();
         $_SESSION["errors"] = $this->errors;
         $_SESSION["old"] = $_POST;
-        $redirect = new Redirect($_SERVER["HTTP_REFERER"]);
-        return $redirect->redirect();
+        return $this->redirect();
     }
 }
 
